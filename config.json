@@ -1,0 +1,9 @@
+{
+  "creator_url": "https://www.youtube.com/@alexhormozi/shorts",
+  "delay_sec": 45,
+  "max_retries": 3,
+  "max_videos": 10,
+  "downloads_dir": "./downloads",
+  "output_dir": "./output",
+  "logs_dir": "./logs"
+}
