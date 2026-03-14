@@ -6,6 +6,19 @@ const app = express();
 const PORT = process.env.PORT || 8888;
 const OUTPUT_DIR = path.join(__dirname, 'output');
 
+// CORS & Security Headers
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  res.header('X-Content-Type-Options', 'nosniff');
+  res.header('X-Frame-Options', 'ALLOW-FROM *');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
 // Serve static files (CSS, JS)
 app.use(express.static(path.join(__dirname, 'public')));
 
