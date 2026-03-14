@@ -340,35 +340,7 @@ app.get('/', (req, res) => {
         }
 
         .play-icon {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          width: 60px;
-          height: 60px;
-          background: rgba(255, 0, 127, 0.8);
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          opacity: 0;
-          transition: all 0.3s ease;
-          z-index: 2;
-        }
-
-        .play-icon::after {
-          content: '';
-          width: 0;
-          height: 0;
-          border-left: 15px solid white;
-          border-top: 10px solid transparent;
-          border-bottom: 10px solid transparent;
-          margin-left: 4px;
-        }
-
-        .video-card:hover .play-icon {
-          opacity: 1;
-          background: rgba(255, 0, 127, 0.95);
+          display: none;
         }
 
         .video-info {
@@ -514,7 +486,7 @@ app.get('/', (req, res) => {
                 \${data.videos.map(v => \`
                   <div class="video-card">
                     <div class="video-wrapper">
-                      <video preload="none">
+                      <video preload="metadata" controls>
                         <source src="\${v.url}" type="video/mp4">
                       </video>
                       <div class="play-icon"></div>
@@ -531,18 +503,6 @@ app.get('/', (req, res) => {
               </div>
             \`;
             content.innerHTML = html;
-
-            // Add click to play
-            document.querySelectorAll('.video-card').forEach(card => {
-              card.addEventListener('click', function() {
-                const video = this.querySelector('video');
-                if (video.paused) {
-                  video.play();
-                } else {
-                  video.pause();
-                }
-              });
-            });
           } catch (err) {
             document.getElementById('content').innerHTML = \`<div class="loading"><p style="color: #ff0080;">Error: \${err.message}</p></div>\`;
           }
