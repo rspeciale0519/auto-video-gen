@@ -1,0 +1,119 @@
+{
+  "name": "YouTube Shorts Compiler",
+  "description": "Download YouTube shorts, add voiceover, watermark, transitions, and compile into final videos",
+  "nodes": [
+    {
+      "parameters": {
+        "triggerType": "manual"
+      },
+      "id": "uuid-trigger",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "command": "cd /home/clawd/projects/nextgen_shorts && source .venv/bin/activate && python yt_scraper_playwright_y2mate.py --max-videos 10",
+        "workingDirectory": "/home/clawd/projects/nextgen_shorts"
+      },
+      "id": "uuid-scraper",
+      "name": "Scrape & Download Shorts (y2mate Browser)",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [450, 300],
+      "credentials": {
+        "localExecution": true
+      }
+    },
+    {
+      "parameters": {
+        "command": "cd /home/clawd/projects/nextgen_shorts && source .venv/bin/activate && python yt_stitcher_enhanced.py --num-outputs 10",
+        "workingDirectory": "/home/clawd/projects/nextgen_shorts"
+      },
+      "id": "uuid-stitcher",
+      "name": "Create Videos (yt_stitcher_enhanced)",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [650, 300],
+      "credentials": {
+        "localExecution": true
+      }
+    },
+    {
+      "parameters": {
+        "command": "cd /home/clawd/projects/nextgen_shorts/output && python3 -m http.server 8888",
+        "workingDirectory": "/home/clawd/projects/nextgen_shorts/output",
+        "executeOnce": false
+      },
+      "id": "uuid-httpserver",
+      "name": "Start HTTP Server",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [850, 300],
+      "credentials": {
+        "localExecution": true
+      }
+    },
+    {
+      "parameters": {
+        "content": "Files ready for download at:\nhttp://100.122.62.69:8888/\n\nVideos created:\n{{ $json.output }}"
+      },
+      "id": "uuid-notice",
+      "name": "Notify - Videos Ready",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [1050, 300]
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Download Shorts (yt_scraper)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Shorts (yt_scraper)": {
+      "main": [
+        [
+          {
+            "node": "Create Videos (yt_stitcher_enhanced)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Videos (yt_stitcher_enhanced)": {
+      "main": [
+        [
+          {
+            "node": "Start HTTP Server",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start HTTP Server": {
+      "main": [
+        [
+          {
+            "node": "Notify - Videos Ready",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "staticData": null,
+  "pinData": null
+}

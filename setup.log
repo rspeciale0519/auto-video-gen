@@ -1,0 +1,50 @@
+2026-03-14 17:47:06,615 - image_stitcher - INFO - ============================================================
+2026-03-14 17:47:06,616 - image_stitcher - INFO - Image to Video Stitcher with Voiceover
+2026-03-14 17:47:06,616 - image_stitcher - INFO - Images dir: ./images
+2026-03-14 17:47:06,616 - image_stitcher - INFO - Voiceover: ./voiceover.wav
+2026-03-14 17:47:06,616 - image_stitcher - INFO - Output: ./public/ai-income-online.mp4
+2026-03-14 17:47:06,616 - image_stitcher - INFO - Format: 1080x1920 (9:16 Shorts)
+2026-03-14 17:47:06,617 - image_stitcher - INFO - ============================================================
+2026-03-14 17:47:06,617 - image_stitcher - INFO - Found 9 images
+2026-03-14 17:47:06,617 - image_stitcher - INFO -   1. 01.jpg
+2026-03-14 17:47:06,617 - image_stitcher - INFO -   2. 02.jpg
+2026-03-14 17:47:06,617 - image_stitcher - INFO -   3. 03.jpg
+2026-03-14 17:47:06,617 - image_stitcher - INFO -   4. 04.jpg
+2026-03-14 17:47:06,617 - image_stitcher - INFO -   5. 05.jpg
+2026-03-14 17:47:06,617 - image_stitcher - INFO -   6. 06.jpg
+2026-03-14 17:47:06,617 - image_stitcher - INFO -   7. 07.jpg
+2026-03-14 17:47:06,617 - image_stitcher - INFO -   8. 08.jpg
+2026-03-14 17:47:06,617 - image_stitcher - INFO -   9. 09.jpg
+2026-03-14 17:47:06,690 - image_stitcher - INFO - Voiceover duration: 66.12s
+2026-03-14 17:47:06,692 - image_stitcher - INFO - Capping video duration at 60s
+2026-03-14 17:47:06,692 - image_stitcher - INFO - Target video duration: 60.00s
+2026-03-14 17:47:06,692 - image_stitcher - INFO - Time per image: 6.67s
+2026-03-14 17:47:06,693 - image_stitcher - INFO - Image 0: 01.jpg (6.67s)
+2026-03-14 17:47:06,693 - image_stitcher - INFO - Image 1: 02.jpg (6.67s)
+2026-03-14 17:47:06,693 - image_stitcher - INFO - Image 2: 03.jpg (6.67s)
+2026-03-14 17:47:06,693 - image_stitcher - INFO - Image 3: 04.jpg (6.67s)
+2026-03-14 17:47:06,693 - image_stitcher - INFO - Image 4: 05.jpg (6.67s)
+2026-03-14 17:47:06,693 - image_stitcher - INFO - Image 5: 06.jpg (6.67s)
+2026-03-14 17:47:06,693 - image_stitcher - INFO - Image 6: 07.jpg (6.67s)
+2026-03-14 17:47:06,693 - image_stitcher - INFO - Image 7: 08.jpg (6.67s)
+2026-03-14 17:47:06,693 - image_stitcher - INFO - Image 8: 09.jpg (6.67s)
+2026-03-14 17:47:06,693 - image_stitcher - INFO - Image 9: 01.jpg (0.00s)
+2026-03-14 17:47:06,693 - image_stitcher - INFO - Concat file: /tmp/concat_demux.txt
+2026-03-14 17:47:06,693 - image_stitcher - INFO - Creating video from images with transitions...
+2026-03-14 17:47:06,761 - image_stitcher - ERROR - FFmpeg concat error: ffmpeg version 6.1.1-3ubuntu5 Copyright (c) 2000-2023 the FFmpeg developers
+  built with gcc 13 (Ubuntu 13.2.0-23ubuntu3)
+  configuration: --prefix=/usr --extra-version=3ubuntu5 --toolchain=hardened --libdir=/usr/lib/x86_64-linux-gnu --incdir=/usr/include/x86_64-linux-gnu --arch=amd64 --enable-gpl --disable-stripping --disable-omx --enable-gnutls --enable-libaom --enable-libass --enable-libbs2b --enable-libcaca --enable-libcdio --enable-libcodec2 --enable-libdav1d --enable-libflite --enable-libfontconfig --enable-libfreetype --enable-libfribidi --enable-libglslang --enable-libgme --enable-libgsm --enable-libharfbuzz --enable-libmp3lame --enable-libmysofa --enable-libopenjpeg --enable-libopenmpt --enable-libopus --enable-librubberband --enable-libshine --enable-libsnappy --enable-libsoxr --enable-libspeex --enable-libtheora --enable-libtwolame --enable-libvidstab --enable-libvorbis --enable-libvpx --enable-libwebp --enable-libx265 --enable-libxml2 --enable-libxvid --enable-libzimg --enable-openal --enable-opencl --enable-opengl --disable-sndio --enable-libvpl --disable-libmfx --enable-libdc1394 --enable-libdrm --enable-libiec61883 --enable-chromaprint --enable-frei0r --enable-ladspa --enable-libbluray --enable-libjack --enable-libpulse --enable-librabbitmq --enable-librist --enable-libsrt --enable-libssh --enable-libsvtav1 --enable-libx264 --enable-libzmq --enable-libzvbi --enable-lv2 --enable-sdl2 --enable-libplacebo --enable-librav1e --enable-pocketsphinx --enable-librsvg --enable-libjxl --enable-shared
+  libavutil      58. 29.100 / 58. 29.100
+  libavcodec     60. 31.102 / 60. 31.102
+  libavformat    60. 16.100 / 60. 16.100
+  libavdevice    60.  3.100 / 60.  3.100
+  libavfilter     9. 12.100 /  9. 12.100
+  libswscale      7.  5.100 /  7.  5.100
+  libswresample   4. 12.100 /  4. 12.100
+  libpostproc    57.  3.100 / 57.  3.100
+[concat @ 0x64d6136e4f40] Line 20: invalid duration '7.105427357601002e-15'
+[in#0 @ 0x64d6136e4e40] Error opening input: Invalid argument
+Error opening input file /tmp/concat_demux.txt.
+Error opening input files: Invalid argument
+
+2026-03-14 17:47:06,763 - image_stitcher - ERROR - Failed to create video

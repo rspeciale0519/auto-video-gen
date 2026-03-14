@@ -1,0 +1,12 @@
+file '/home/clawd/projects/nextgen_shorts/assets/images/image_02.jpg'
+duration 7.0
+file '/home/clawd/projects/nextgen_shorts/assets/images/image_05.jpg'
+duration 7.0
+file '/home/clawd/projects/nextgen_shorts/assets/images/image_06.jpg'
+duration 7.0
+file '/home/clawd/projects/nextgen_shorts/assets/images/image_07.jpg'
+duration 7.0
+file '/home/clawd/projects/nextgen_shorts/assets/images/image_08.jpg'
+duration 7.0
+file '/home/clawd/projects/nextgen_shorts/assets/images/image_08.jpg'
+duration 9.2

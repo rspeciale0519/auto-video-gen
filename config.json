@@ -5,5 +5,20 @@
   "max_videos": 10,
   "downloads_dir": "./downloads",
   "output_dir": "./output",
-  "logs_dir": "./logs"
+  "logs_dir": "./logs",
+  "clip_duration_seconds": 7.0,
+  "branding": {
+    "channel_name": "Your Channel Name",
+    "brand_color": "#FF0000",
+    "background_color": "#000000",
+    "text_color": "#FFFFFF",
+    "watermark_text": "Your Channel",
+    "watermark_opacity": 0.3,
+    "logo_path": null
+  },
+  "voiceover": {
+    "enabled": true,
+    "voice": "en_US-libritts-high",
+    "commentary_template": "Check out this one. Number {num}."
+  }
 }

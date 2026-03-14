@@ -106,6 +106,10 @@ def download_shorts(
                 "--flat-playlist",
                 "--print", "%(id)s",
                 "--playlist-end", str(max_videos),
+                "-o", "-",
+                "--socket-timeout", "30",
+                "--default-search", "ytsearch",
+                "--no-warnings",
                 creator_url
             ],
             capture_output=True,
@@ -143,6 +147,7 @@ def download_shorts(
                 logger.info(f"Downloading [{idx + 1}/{len(video_ids)}]: {video_id} (attempt {attempt + 1})")
 
                 # Download video
+                # Try with cookies from browser first
                 result = subprocess.run(
                     [
                         "yt-dlp",
@@ -151,12 +156,33 @@ def download_shorts(
                         "-o", output_template,
                         "--write-info-json",
                         "--no-playlist",
+                        "--cookies-from-browser", "firefox:default",
                         video_url
                     ],
                     capture_output=True,
                     text=True,
                     timeout=300
                 )
+
+                # If cookies approach fails, try alternative method
+                if result.returncode != 0:
+                    logger.info(f"Browser cookies not available, trying fallback...")
+                    result = subprocess.run(
+                        [
+                            "yt-dlp",
+                            "-f", "best[ext=mp4]/best",
+                            "--merge-output-format", "mp4",
+                            "-o", output_template,
+                            "--write-info-json",
+                            "--no-playlist",
+                            "--user-agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36",
+                            "--extractor-args", "youtube:player_client=android",
+                            video_url
+                        ],
+                        capture_output=True,
+                        text=True,
+                        timeout=300
+                    )
 
                 if result.returncode != 0:
                     logger.warning(f"yt-dlp failed: {result.stderr}")
