@@ -320,6 +320,14 @@ app.get('/', (req, res) => {
           background: #000;
           overflow: hidden;
           border-radius: 16px;
+          border: 2px solid rgba(255, 255, 255, 0.15);
+          box-shadow: 0 0 30px rgba(255, 0, 127, 0.2), inset 0 0 20px rgba(255, 0, 127, 0.05);
+          transition: all 0.4s ease;
+        }
+
+        .video-card:hover .video-wrapper {
+          border-color: rgba(255, 0, 127, 0.6);
+          box-shadow: 0 0 40px rgba(255, 0, 127, 0.4), inset 0 0 20px rgba(255, 0, 127, 0.1);
         }
 
         .video-wrapper video {
