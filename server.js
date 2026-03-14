@@ -37,16 +37,19 @@ app.get('/api/videos', (req, res) => {
       return res.json({ videos: [] });
     }
 
-    const files = fs.readdirSync(OUTPUT_DIR)
+    // Try public folder first (Vercel), then output folder (local)
+    const sourceDir = fs.existsSync(path.join(__dirname, 'public')) ? path.join(__dirname, 'public') : OUTPUT_DIR;
+    
+    const files = fs.readdirSync(sourceDir)
       .filter(f => f.endsWith('.mp4'))
       .map(f => {
-        const filePath = path.join(OUTPUT_DIR, f);
+        const filePath = path.join(sourceDir, f);
         const stats = fs.statSync(filePath);
         return {
           filename: f,
           size: (stats.size / (1024 * 1024)).toFixed(2) + ' MB',
           created: stats.mtime || stats.birthtime,
-          url: `/api/stream/${encodeURIComponent(f)}`
+          url: `/${f}`
         };
       })
       .sort((a, b) => new Date(b.created) - new Date(a.created));
