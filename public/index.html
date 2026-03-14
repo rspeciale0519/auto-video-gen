@@ -458,8 +458,8 @@
                         const lastModified = response.headers.get('last-modified') || new Date().toISOString();
                         
                         videos.push({
-                            name: file.replace(/\.mp4$/, '').replace(/_/g, ' ').replace(/([A-Z])/g, ' $1').trim(),
-                            file: `/${file}?v=${Date.now()}`,
+                            name: file.replace(/\.mp4$/, '').replace(/_/g, ' ').replace(/-/g, ' ').trim(),
+                            file: `/${file}`,
                             size: size ? `${(size / (1024 * 1024)).toFixed(2)} MB` : '-- MB',
                             created: new Date(lastModified).toISOString(),
                             filename: file
