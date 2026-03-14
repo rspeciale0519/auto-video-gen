@@ -451,7 +451,7 @@
 
             for (const file of files) {
                 try {
-                    const response = await fetch(`/${file}`, { method: 'HEAD' });
+                    const response = await fetch(`/${file}?v=${Date.now()}`, { method: 'HEAD' });
                     if (response.ok) {
                         // Get file info
                         const size = response.headers.get('content-length');
@@ -459,7 +459,7 @@
                         
                         videos.push({
                             name: file.replace(/\.mp4$/, '').replace(/_/g, ' ').replace(/([A-Z])/g, ' $1').trim(),
-                            file: `/${file}`,
+                            file: `/${file}?v=${Date.now()}`,
                             size: size ? `${(size / (1024 * 1024)).toFixed(2)} MB` : '-- MB',
                             created: new Date(lastModified).toISOString(),
                             filename: file
