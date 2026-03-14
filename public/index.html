@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NextGen Shorts - Auto-Generated Video Library</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.8;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .player-section {
+            background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            overflow: hidden;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            aspect-ratio: 9/16;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .video-player {
+            width: 100%;
+            height: 100%;
+        }
+
+        .video-player video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        .timestamp-overlay {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            font-weight: 500;
+            pointer-events: none;
+            backdrop-filter: blur(4px);
+        }
+
+        .video-info {
+            padding: 20px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .video-info h2 {
+            color: #fff;
+            font-size: 1.4em;
+            margin-bottom: 15px;
+        }
+
+        .video-meta {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            font-size: 0.9em;
+        }
+
+        .meta-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .meta-label {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 5px;
+            font-size: 0.85em;
+        }
+
+        .meta-value {
+            color: #fff;
+        }
+
+        .sidebar {
+            background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            max-height: 700px;
+            overflow-y: auto;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .sidebar h3 {
+            color: #fff;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .video-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .video-item {
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .video-item:hover {
+            background: rgba(102, 126, 234, 0.15);
+            border-left-color: #764ba2;
+            transform: translateX(4px);
+        }
+
+        .video-item.active {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.3) 0%, rgba(118, 75, 162, 0.3) 100%);
+            border-left-color: #764ba2;
+            border: 1px solid rgba(102, 126, 234, 0.4);
+        }
+
+        .video-item .name {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 4px;
+            color: #fff;
+        }
+
+        .video-item .meta {
+            font-size: 0.8em;
+            opacity: 0.7;
+            color: #aaa;
+        }
+
+        .stats {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 40px;
+            text-align: center;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .stats h3 {
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .stat {
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .empty-state-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #999;
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                max-height: none;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .video-meta {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .main-content {
+                gap: 20px;
+            }
+        }
+
+        /* Scrollbar styling */
+        .sidebar::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(102, 126, 234, 0.3);
+            border-radius: 4px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: rgba(102, 126, 234, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎬 NextGen Shorts</h1>
+            <p>Auto-Generated Video Library</p>
+        </div>
+
+        <div class="main-content">
+            <div class="player-section">
+                <div class="video-container">
+                    <div class="video-player" id="videoPlayer">
+                        <video id="mainVideo" controls>
+                            <source src="" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="timestamp-overlay" id="timestampOverlay">
+                        --/-- at --:--
+                    </div>
+                </div>
+
+                <div class="video-info">
+                    <h2 id="videoTitle">Select a video</h2>
+                    <div class="video-meta">
+                        <div class="meta-item">
+                            <div class="meta-label">Created</div>
+                            <div class="meta-value" id="videoCreated">--</div>
+                        </div>
+                        <div class="meta-item">
+                            <div class="meta-label">Size</div>
+                            <div class="meta-value" id="videoSize">--</div>
+                        </div>
+                        <div class="meta-item">
+                            <div class="meta-label">Format</div>
+                            <div class="meta-value">9:16 Shorts</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <h3>📚 Videos (Newest First)</h3>
+                <div class="video-list" id="videoList">
+                    <div class="loading">Loading videos...</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats">
+            <h3>Library Statistics</h3>
+            <div class="stats-grid">
+                <div class="stat">
+                    <div class="stat-number" id="totalVideos">0</div>
+                    <div class="stat-label">Total Videos</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="totalDuration">0h</div>
+                    <div class="stat-label">Total Duration</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="totalSize">0 MB</div>
+                    <div class="stat-label">Library Size</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="lastUpdated">--</div>
+                    <div class="stat-label">Most Recent</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let allVideos = [];
+        const mainVideo = document.getElementById('mainVideo');
+        const videoTitle = document.getElementById('videoTitle');
+        const videoCreated = document.getElementById('videoCreated');
+        const videoSize = document.getElementById('videoSize');
+        const videoList = document.getElementById('videoList');
+        const timestampOverlay = document.getElementById('timestampOverlay');
+
+        // Format date for display
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const year = date.getFullYear();
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            return {
+                date: `${month}/${day}/${year}`,
+                time: `${hours}:${minutes}`,
+                full: `${month}/${day}/${year} at ${hours}:${minutes}`
+            };
+        }
+
+        // Load videos from public folder
+        async function loadVideos() {
+            try {
+                const response = await fetch('/api/videos');
+                const data = await response.json();
+                
+                // Get all MP4 files from the current directory structure
+                allVideos = await fetchVideoFiles();
+                
+                // Sort by created date (newest first)
+                allVideos.sort((a, b) => new Date(b.created) - new Date(a.created));
+
+                if (allVideos.length === 0) {
+                    videoList.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📹</div><p>No videos yet</p></div>';
+                    return;
+                }
+
+                renderVideoList();
+                loadVideo(allVideos[0]); // Load the newest video by default
+                updateStats();
+            } catch (err) {
+                videoList.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><p>Error loading videos</p></div>';
+                console.error('Error loading videos:', err);
+            }
+        }
+
+        // Fetch video files from public folder
+        async function fetchVideoFiles() {
+            const videos = [];
+            const files = [
+                'ai-income-online.mp4',
+                'demo_final_shorts.mp4',
+                'final_5.mp4', 'final_4.mp4', 'final_3.mp4', 'final_2.mp4', 'final_1.mp4',
+                'demo_content_shorts.mp4',
+                'short_5.mp4', 'short_4.mp4', 'short_3.mp4', 'short_2.mp4', 'short_1.mp4',
+                'demo_visual_compilation.mp4',
+                'vis5.mp4', 'vis4.mp4', 'vis3.mp4', 'vis2.mp4', 'vis1.mp4',
+                'demo_compilation_quality.mp4',
+                'demo_q5.mp4', 'demo_q4.mp4', 'demo_q3.mp4', 'demo_q2.mp4', 'demo_q1.mp4',
+                'demo_compilation.mp4',
+                'demo_test_005.mp4', 'demo_test_004.mp4', 'demo_test_003.mp4', 'demo_test_002.mp4', 'demo_test_001.mp4'
+            ];
+
+            for (const file of files) {
+                try {
+                    const response = await fetch(`/${file}`, { method: 'HEAD' });
+                    if (response.ok) {
+                        // Get file info
+                        const size = response.headers.get('content-length');
+                        const lastModified = response.headers.get('last-modified') || new Date().toISOString();
+                        
+                        videos.push({
+                            name: file.replace(/\.mp4$/, '').replace(/_/g, ' ').replace(/([A-Z])/g, ' $1').trim(),
+                            file: `/${file}`,
+                            size: size ? `${(size / (1024 * 1024)).toFixed(2)} MB` : '-- MB',
+                            created: new Date(lastModified).toISOString(),
+                            filename: file
+                        });
+                    }
+                } catch (err) {
+                    // File not found, continue
+                }
+            }
+
+            return videos;
+        }
+
+        function loadVideo(video) {
+            mainVideo.src = video.file;
+            videoTitle.textContent = video.name;
+            
+            const formatted = formatDate(video.created);
+            videoCreated.textContent = formatted.full;
+            videoSize.textContent = video.size;
+            timestampOverlay.textContent = formatted.full;
+
+            // Update active state
+            document.querySelectorAll('.video-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`[data-file="${video.file}"]`)?.classList.add('active');
+        }
+
+        function renderVideoList() {
+            videoList.innerHTML = allVideos.map((video, idx) => {
+                const formatted = formatDate(video.created);
+                return `
+                    <div class="video-item ${idx === 0 ? 'active' : ''}" data-file="${video.file}" onclick="loadVideo(allVideos[${idx}])">
+                        <span class="name">${video.name}</span>
+                        <span class="meta">${formatted.date} at ${formatted.time}</span>
+                        <span class="meta">${video.size}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateStats() {
+            const totalSize = allVideos.reduce((sum, v) => {
+                const sizeStr = v.size.replace(' MB', '');
+                return sum + parseFloat(sizeStr);
+            }, 0);
+
+            const newestDate = allVideos.length > 0 ? new Date(allVideos[0].created) : new Date();
+            const formatted = formatDate(newestDate.toISOString());
+
+            document.getElementById('totalVideos').textContent = allVideos.length;
+            document.getElementById('totalSize').textContent = totalSize.toFixed(1) + ' MB';
+            document.getElementById('lastUpdated').textContent = formatted.date;
+        }
+
+        // Initialize on page load
+        loadVideos();
+
+        // Refresh every 30 seconds to catch new uploads
+        setInterval(loadVideos, 30000);
+    </script>
+</body>
+</html>
