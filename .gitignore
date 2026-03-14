@@ -12,7 +12,6 @@ build/
 # Project directories (keep structure, ignore contents)
 downloads/*
 !downloads/.gitkeep
-output/*
 !output/.gitkeep
 logs/*
 !logs/.gitkeep
@@ -20,3 +19,6 @@ logs/*
 # OS
 .DS_Store
 Thumbs.db
+.vercel
+output/
+!output/.gitkeep
