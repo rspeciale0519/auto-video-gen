@@ -22,6 +22,14 @@ app.use((req, res, next) => {
 // Serve static files (CSS, JS)
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Serve output folder with videos
+app.use('/output', express.static(OUTPUT_DIR, {
+  setHeaders: (res, path) => {
+    res.setHeader('Content-Type', 'video/mp4');
+    res.setHeader('Accept-Ranges', 'bytes');
+  }
+}));
+
 // API: Get list of generated videos
 app.get('/api/videos', (req, res) => {
   try {
