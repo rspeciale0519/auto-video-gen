@@ -516,7 +516,6 @@ app.get('/', (req, res) => {
         }
 
         loadVideos();
-        setInterval(loadVideos, 5000);
       </script>
     </body>
     </html>
