@@ -106,7 +106,10 @@ app.get('/', (req, res) => {
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>NextGen Shorts - Video Library</title>
+      <title>AutoVideoGen — Shorts Library</title>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
       <style>
         * {
           margin: 0;
@@ -114,152 +117,368 @@ app.get('/', (req, res) => {
           box-sizing: border-box;
         }
 
+        html, body {
+          width: 100%;
+          height: 100%;
+        }
+
         body {
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          font-family: 'Poppins', sans-serif;
+          background: #0a0a0a;
+          color: #f5f5f5;
+          overflow-x: hidden;
+          position: relative;
+        }
+
+        /* Animated background */
+        body::before {
+          content: '';
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 200%;
+          height: 200%;
+          background: radial-gradient(ellipse at 20% 50%, rgba(255, 0, 127, 0.08) 0%, transparent 40%),
+                      radial-gradient(ellipse at 80% 30%, rgba(0, 200, 255, 0.06) 0%, transparent 40%);
+          animation: drift 20s ease-in-out infinite;
+          pointer-events: none;
+          z-index: 0;
+        }
+
+        @keyframes drift {
+          0%, 100% { transform: translate(0, 0); }
+          50% { transform: translate(50px, 50px); }
+        }
+
+        .wrapper {
+          position: relative;
+          z-index: 1;
           min-height: 100vh;
-          padding: 20px;
+          padding: 60px 20px;
         }
 
         .container {
-          max-width: 1200px;
+          max-width: 1400px;
           margin: 0 auto;
         }
 
         header {
           text-align: center;
-          color: white;
-          margin-bottom: 40px;
+          margin-bottom: 80px;
+          animation: fadeInDown 0.8s ease-out;
+        }
+
+        .logo {
+          display: inline-block;
+          font-size: 36px;
+          margin-bottom: 20px;
+          opacity: 0.9;
         }
 
         h1 {
-          font-size: 2.5em;
-          margin-bottom: 10px;
-          font-weight: 700;
+          font-family: 'Playfair Display', serif;
+          font-size: clamp(2.5rem, 6vw, 5rem);
+          font-weight: 800;
+          background: linear-gradient(120deg, #ffffff 0%, #a0a0ff 50%, #ff0080 100%);
+          background-size: 200% auto;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          margin-bottom: 12px;
+          letter-spacing: -2px;
+          animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+          0%, 100% { background-position: 0% center; }
+          50% { background-position: 100% center; }
         }
 
         .subtitle {
-          font-size: 1.1em;
-          opacity: 0.9;
+          font-size: 1rem;
+          font-weight: 300;
+          letter-spacing: 3px;
+          text-transform: uppercase;
+          color: #888;
+          margin-top: 16px;
+        }
+
+        .stats-row {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 30px;
+          margin-bottom: 80px;
+          animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        .stat-card {
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 16px;
+          padding: 30px;
+          backdrop-filter: blur(10px);
+          text-align: center;
+          transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+          position: relative;
+          overflow: hidden;
+        }
+
+        .stat-card::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+          transition: left 0.6s ease;
+        }
+
+        .stat-card:hover {
+          border-color: rgba(255, 0, 127, 0.4);
+          background: rgba(255, 0, 127, 0.05);
+          transform: translateY(-8px);
+        }
+
+        .stat-card:hover::before {
+          left: 100%;
+        }
+
+        .stat-value {
+          font-size: 3em;
+          font-weight: 800;
+          background: linear-gradient(135deg, #fff 0%, #a0a0ff 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          margin-bottom: 8px;
+        }
+
+        .stat-label {
+          font-size: 0.85em;
+          text-transform: uppercase;
+          letter-spacing: 2px;
+          color: #888;
+          font-weight: 600;
         }
 
         .loading {
           text-align: center;
-          color: white;
-          font-size: 1.2em;
-          padding: 40px;
+          padding: 80px 20px;
+          animation: fadeIn 0.6s ease;
+        }
+
+        .loading-spinner {
+          display: inline-block;
+          width: 50px;
+          height: 50px;
+          border: 3px solid rgba(255,255,255,0.1);
+          border-top-color: #ff0080;
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+          margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+
+        .loading p {
+          color: #888;
+          margin-top: 20px;
         }
 
         .videos-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-          gap: 20px;
-          margin-top: 20px;
+          grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+          gap: 28px;
+          animation: fadeInUp 0.8s ease-out 0.3s both;
         }
 
         .video-card {
-          background: white;
-          border-radius: 12px;
+          background: rgba(255, 255, 255, 0.02);
+          border: 1px solid rgba(255, 255, 255, 0.06);
+          border-radius: 20px;
           overflow: hidden;
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-          transition: transform 0.3s ease, box-shadow 0.3s ease;
+          transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
           cursor: pointer;
+          position: relative;
+          group: 1;
         }
 
         .video-card:hover {
-          transform: translateY(-8px);
-          box-shadow: 0 12px 48px rgba(0, 0, 0, 0.2);
+          border-color: rgba(255, 0, 127, 0.5);
+          background: rgba(255, 0, 127, 0.04);
+          transform: translateY(-12px);
+          box-shadow: 0 20px 60px rgba(255, 0, 127, 0.2);
         }
 
-        .video-card video {
+        .video-wrapper {
+          position: relative;
           width: 100%;
-          height: 400px;
-          object-fit: cover;
+          padding-bottom: 177.78%;
           background: #000;
+          overflow: hidden;
+          border-radius: 16px;
+        }
+
+        .video-wrapper video {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .play-icon {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 60px;
+          height: 60px;
+          background: rgba(255, 0, 127, 0.8);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          opacity: 0;
+          transition: all 0.3s ease;
+          z-index: 2;
+        }
+
+        .play-icon::after {
+          content: '';
+          width: 0;
+          height: 0;
+          border-left: 15px solid white;
+          border-top: 10px solid transparent;
+          border-bottom: 10px solid transparent;
+          margin-left: 4px;
+        }
+
+        .video-card:hover .play-icon {
+          opacity: 1;
+          background: rgba(255, 0, 127, 0.95);
         }
 
         .video-info {
-          padding: 15px;
-          background: white;
+          padding: 24px;
+          background: rgba(255, 255, 255, 0.01);
+          border-top: 1px solid rgba(255, 255, 255, 0.04);
         }
 
         .video-name {
           font-weight: 600;
-          color: #333;
-          margin-bottom: 8px;
+          margin-bottom: 10px;
           font-size: 0.95em;
           word-break: break-word;
+          color: #f5f5f5;
+          line-height: 1.4;
         }
 
         .video-meta {
-          font-size: 0.85em;
-          color: #666;
           display: flex;
           justify-content: space-between;
+          align-items: center;
+          font-size: 0.8em;
+          color: #666;
         }
 
-        .video-date {
-          color: #999;
-          font-size: 0.8em;
+        .video-size {
+          background: rgba(255, 0, 127, 0.1);
+          padding: 4px 10px;
+          border-radius: 6px;
+          font-weight: 600;
+          color: #ff0080;
         }
 
         .empty-state {
-          background: rgba(255, 255, 255, 0.1);
-          backdrop-filter: blur(10px);
-          border: 2px dashed rgba(255, 255, 255, 0.3);
-          border-radius: 12px;
-          padding: 60px 20px;
+          background: rgba(255, 255, 255, 0.02);
+          border: 2px dashed rgba(255, 255, 255, 0.1);
+          border-radius: 20px;
+          padding: 100px 40px;
           text-align: center;
-          color: white;
         }
 
         .empty-state h2 {
-          font-size: 1.5em;
-          margin-bottom: 10px;
+          font-family: 'Playfair Display', serif;
+          font-size: 2em;
+          margin-bottom: 16px;
+          color: #aaa;
         }
 
         .empty-state p {
-          opacity: 0.8;
+          color: #666;
           font-size: 1.05em;
         }
 
-        .stats {
-          background: rgba(255, 255, 255, 0.1);
-          backdrop-filter: blur(10px);
-          border-radius: 12px;
-          padding: 20px;
-          color: white;
-          margin-bottom: 30px;
-          text-align: center;
+        @keyframes fadeInDown {
+          from {
+            opacity: 0;
+            transform: translateY(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
 
-        .stat-value {
-          font-size: 2em;
-          font-weight: 700;
-          color: #fff;
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
 
-        .stat-label {
-          font-size: 0.95em;
-          opacity: 0.8;
-          margin-top: 5px;
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+          .videos-grid {
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+          }
+
+          header {
+            margin-bottom: 50px;
+          }
+
+          .stat-card {
+            padding: 20px;
+          }
         }
       </style>
     </head>
     <body>
-      <div class="container">
-        <header>
-          <h1>🎬 NextGen Shorts</h1>
-          <p class="subtitle">Auto-Generated Video Library</p>
-        </header>
+      <div class="wrapper">
+        <div class="container">
+          <header>
+            <div class="logo">🎬</div>
+            <h1>AutoVideoGen</h1>
+            <p class="subtitle">Shorts Library</p>
+          </header>
 
-        <div class="stats">
-          <div class="stat-value" id="videoCount">0</div>
-          <div class="stat-label">Videos Generated</div>
-        </div>
+          <div class="stats-row">
+            <div class="stat-card">
+              <div class="stat-value" id="videoCount">0</div>
+              <div class="stat-label">Videos Generated</div>
+            </div>
+          </div>
 
-        <div id="content">
-          <div class="loading">Loading videos...</div>
+          <div id="content">
+            <div class="loading">
+              <div class="loading-spinner"></div>
+              <p>Loading your video collection...</p>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -274,7 +493,7 @@ app.get('/', (req, res) => {
               content.innerHTML = \`
                 <div class="empty-state">
                   <h2>No Videos Yet</h2>
-                  <p>Generated videos will appear here</p>
+                  <p>Your generated videos will appear here once they're ready</p>
                 </div>
               \`;
               return;
@@ -286,15 +505,17 @@ app.get('/', (req, res) => {
               <div class="videos-grid">
                 \${data.videos.map(v => \`
                   <div class="video-card">
-                    <video controls>
-                      <source src="\${v.url}" type="video/mp4">
-                      Your browser does not support the video tag.
-                    </video>
+                    <div class="video-wrapper">
+                      <video preload="none">
+                        <source src="\${v.url}" type="video/mp4">
+                      </video>
+                      <div class="play-icon"></div>
+                    </div>
                     <div class="video-info">
                       <div class="video-name">\${v.filename}</div>
                       <div class="video-meta">
-                        <span>\${v.size}</span>
-                        <span class="video-date">\${new Date(v.created).toLocaleDateString()}</span>
+                        <span class="video-size">\${v.size}</span>
+                        <span>\${new Date(v.created).toLocaleDateString('en-US', {month: 'short', day: 'numeric'})}</span>
                       </div>
                     </div>
                   </div>
@@ -302,8 +523,20 @@ app.get('/', (req, res) => {
               </div>
             \`;
             content.innerHTML = html;
+
+            // Add click to play
+            document.querySelectorAll('.video-card').forEach(card => {
+              card.addEventListener('click', function() {
+                const video = this.querySelector('video');
+                if (video.paused) {
+                  video.play();
+                } else {
+                  video.pause();
+                }
+              });
+            });
           } catch (err) {
-            document.getElementById('content').innerHTML = \`<div class="loading" style="color: red;">Error loading videos: \${err.message}</div>\`;
+            document.getElementById('content').innerHTML = \`<div class="loading"><p style="color: #ff0080;">Error: \${err.message}</p></div>\`;
           }
         }
 
