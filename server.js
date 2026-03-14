@@ -45,8 +45,8 @@ app.get('/api/videos', (req, res) => {
         return {
           filename: f,
           size: (stats.size / (1024 * 1024)).toFixed(2) + ' MB',
-          created: stats.birthtime,
-          url: `/video/${f}`
+          created: stats.mtime || stats.birthtime,
+          url: `/api/stream/${encodeURIComponent(f)}`
         };
       })
       .sort((a, b) => new Date(b.created) - new Date(a.created));
@@ -57,9 +57,9 @@ app.get('/api/videos', (req, res) => {
   }
 });
 
-// Serve video files
-app.get('/video/:filename', (req, res) => {
-  const filename = req.params.filename;
+// Stream video files
+app.get('/api/stream/:filename', (req, res) => {
+  const filename = decodeURIComponent(req.params.filename);
   const filePath = path.join(OUTPUT_DIR, filename);
 
   // Security: prevent directory traversal
@@ -68,34 +68,41 @@ app.get('/video/:filename', (req, res) => {
   }
 
   if (!fs.existsSync(filePath)) {
-    return res.status(404).send('Video not found');
+    return res.status(404).json({ error: 'Video not found' });
   }
 
-  const stat = fs.statSync(filePath);
-  const fileSize = stat.size;
-  const range = req.headers.range;
+  try {
+    const stat = fs.statSync(filePath);
+    const fileSize = stat.size;
+    const range = req.headers.range;
 
-  if (range) {
-    const parts = range.replace(/bytes=/, '').split('-');
-    const start = parseInt(parts[0], 10);
-    const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
-    const chunksize = (end - start) + 1;
+    res.setHeader('Content-Type', 'video/mp4');
+    res.setHeader('Accept-Ranges', 'bytes');
+    res.setHeader('Cache-Control', 'public, max-age=3600');
 
-    res.writeHead(206, {
-      'Content-Range': `bytes ${start}-${end}/${fileSize}`,
-      'Accept-Ranges': 'bytes',
-      'Content-Length': chunksize,
-      'Content-Type': 'video/mp4'
-    });
+    if (range) {
+      const parts = range.replace(/bytes=/, '').split('-');
+      const start = parseInt(parts[0], 10);
+      const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+      const chunksize = (end - start) + 1;
 
-    fs.createReadStream(filePath, { start, end }).pipe(res);
-  } else {
-    res.writeHead(200, {
-      'Content-Length': fileSize,
-      'Content-Type': 'video/mp4'
-    });
-    fs.createReadStream(filePath).pipe(res);
+      res.status(206);
+      res.setHeader('Content-Range', `bytes ${start}-${end}/${fileSize}`);
+      res.setHeader('Content-Length', chunksize);
+
+      fs.createReadStream(filePath, { start, end }).pipe(res);
+    } else {
+      res.setHeader('Content-Length', fileSize);
+      fs.createReadStream(filePath).pipe(res);
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
+});
+
+// Legacy support for /video/:filename
+app.get('/video/:filename', (req, res) => {
+  res.redirect(`/api/stream/${req.params.filename}`);
 });
 
 // Serve dashboard HTML
