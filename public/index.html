@@ -337,12 +337,12 @@
                             <div class="meta-value" id="videoCreated">--</div>
                         </div>
                         <div class="meta-item">
-                            <div class="meta-label">Size</div>
-                            <div class="meta-value" id="videoSize">--</div>
+                            <div class="meta-label">Duration</div>
+                            <div class="meta-value" id="videoDuration">--:--</div>
                         </div>
                         <div class="meta-item">
-                            <div class="meta-label">Format</div>
-                            <div class="meta-value">9:16 Shorts</div>
+                            <div class="meta-label">Size</div>
+                            <div class="meta-value" id="videoSize">--</div>
                         </div>
                     </div>
                 </div>
@@ -433,6 +433,9 @@
         async function fetchVideoFiles() {
             const videos = [];
             const files = [
+                'sat-study-guide.mp4',
+                'ai-income-fixed.mp4',
+                'ai-income-30sec.mp4',
                 'ai-income-online.mp4',
                 'demo_final_shorts.mp4',
                 'final_5.mp4', 'final_4.mp4', 'final_3.mp4', 'final_2.mp4', 'final_1.mp4',
@@ -470,6 +473,13 @@
             return videos;
         }
 
+        function formatDuration(seconds) {
+            if (!seconds || isNaN(seconds)) return '--:--';
+            const m = Math.floor(seconds / 60);
+            const s = Math.floor(seconds % 60);
+            return `${m}:${String(s).padStart(2, '0')}`;
+        }
+
         function loadVideo(video) {
             mainVideo.src = video.file;
             videoTitle.textContent = video.name;
@@ -478,6 +488,15 @@
             videoCreated.textContent = formatted.full;
             videoSize.textContent = video.size;
             timestampOverlay.textContent = formatted.full;
+
+            // Get actual duration from video element
+            mainVideo.onloadedmetadata = () => {
+                const dur = formatDuration(mainVideo.duration);
+                document.getElementById('videoDuration').textContent = dur;
+                // Update this video's duration in the sidebar
+                const sidebarItem = document.querySelector(`[data-file="${video.file}"] .meta-dur`);
+                if (sidebarItem) sidebarItem.textContent = dur;
+            };
 
             // Update active state
             document.querySelectorAll('.video-item').forEach(item => {
@@ -493,7 +512,7 @@
                     <div class="video-item ${idx === 0 ? 'active' : ''}" data-file="${video.file}" onclick="loadVideo(allVideos[${idx}])">
                         <span class="name">${video.name}</span>
                         <span class="meta">${formatted.date} at ${formatted.time}</span>
-                        <span class="meta">${video.size}</span>
+                        <span class="meta">${video.size} &bull; <span class="meta-dur">--:--</span></span>
                     </div>
                 `;
             }).join('');
